@@ -38,7 +38,7 @@ const postSchema =  new Schema({
     created_at:String
 }, { toJSON: { virtuals: true} });
 postSchema.virtual('short_description').get(function() {
-    return this.description.substr(0,100)+'...'
+    return this.description.substr(0,250)+'...'
 });
 postSchema.virtual('created_at_formatted').get(function() {
     return changeDateFormat(this.created_at)

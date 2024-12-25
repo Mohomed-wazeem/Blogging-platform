@@ -2,16 +2,34 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from 'next/navigation'; 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const inputRef = useRef("");
+  const [search, setSearch] =  useState(false);
 
   useEffect(() => {
     fetch(process.env.NEXT_PUBLIC_API_URL+'/posts')
     .then((res) => res.json() )
     .then(res => setPosts(res))
   },[]);
+
+  const searchPost= (e) => {
+
+    if(e.type == 'keydown' && e.key !== 'Enter'){
+      return;
+    }
+
+    setSearch(true);
+    // setTimeout(()=> {
+      fetch(process.env.NEXT_PUBLIC_API_URL+'/posts?q='+inputRef.current.value)
+      .then((res) => res.json() )
+      .then(res => setPosts(res))
+      .finally(() => setSearch(false))
+    // }, 200)  
+    
+  }
 
   return (
     <>
@@ -20,8 +38,8 @@ export default function Home() {
       <h1 className="text-4xl font-extrabold text-gray-800 mb-4">Welcome to our blog post</h1>
       <p className="text-lg text-gray-600 mb-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum nesciunt doloribus, nostrum, asperiores assumenda non minima, minus aperiam nobis porro hic dolorem. Nulla hic itaque iste ipsum est voluptatem veniam.</p>
       <div className="container px-2 py-5 text-center">
-        <input type="text" className="w-2/3 px-4 py-2 border border-gray mr-1 text-left" placeholder="Search blogs here" />
-        <button className="px-4 py-2 bg-blue-500 text-white rounded" >Search</button>
+        <input onKeyDown={searchPost}  ref={inputRef} type="text" className="w-2/3 px-4 py-2 border border-gray mr-1 text-left" placeholder="Search blogs here" />
+        <button onClick={searchPost} disabled ={search} className="px-4 py-2 bg-blue-500 text-white rounded" >{search?'...':"search"}</button>
       </div>
       </div>
       </main>
@@ -41,6 +59,20 @@ export default function Home() {
               </Link>
             )
             )}
+             {/* <div>
+            {!posts.length > 0 && inputRef.current.value &&
+            <p>Sorry, We couldn't find any results<b>
+              <img src="/images/NoPost.gif"></img>
+            </b></p>}
+            </div> */}
+
+            <div className="flex items-center justify-center text-gray-400">
+            {!posts.length > 0 && inputRef.current.value &&
+            <p><b>Sorry, We couldn't find any results</b></p>
+              // <img src="/images/NoPost.gif"></img>
+            }
+            </div>     
+
 
           </div>
         </div>
@@ -49,4 +81,3 @@ export default function Home() {
     </>
   );
 }
-

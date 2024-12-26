@@ -1,34 +1,32 @@
 // "use client";
-// import { state } from "mongoose";
 // import { useState } from "react";
 
 // export default function ContactUs() {
 //   const [inputs, setInputs] = useState({});
 //   const [message, setMessage] = useState("");
 
-
 //   const handleInput = (e) => {
 //     setInputs((state) => {
 //       return { ...state, [e.target.name]: e.target.value };
 //     });
-//       }
+//   };
 
 //   const handleSubmit = (e) => {
-//     e.prevenDefault();
-//     fetch(process.env.NEXT_PUBLIC_API_URL+'/enquiry',{
-//       method:'POST',
-//       body: JSON.stringify(inputs)
+//     e.preventDefault(); // Fixed typo
+//     fetch(process.env.NEXT_PUBLIC_API_URL + "/enquiry", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(inputs),
 //     })
-//     .then((res) => res.json())
-//     .then((res) => {
-//       setMessage(res.message);
-//       setInputs({});
-//     })
-//   }    
+//       .then((res) => res.json())
+//       .then((res) => {
+//         setMessage(res.message);
+//         setInputs({});
+//       });
+//   };
 
 //   return (
 //     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 flex flex-col items-center justify-start">
-
 //       <div className="relative w-full">
 //         <img
 //           src="/images/contactusbnr.jpeg"
@@ -54,9 +52,10 @@
 //             >
 //               Your Name
 //             </label>
-//             <input  onChange={handleInput}
+//             <input
+//               onChange={handleInput}
 //               type="text"
-//               value={inputs.name??""}
+//               value={inputs.name ?? ""}
 //               id="name"
 //               name="name"
 //               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -72,9 +71,10 @@
 //             >
 //               Email Address
 //             </label>
-//             <input onChange={handleInput}
+//             <input
+//               onChange={handleInput}
 //               type="email"
-//               value={inputs.email??""}
+//               value={inputs.email ?? ""}
 //               id="email"
 //               name="email"
 //               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -90,8 +90,9 @@
 //             >
 //               Message
 //             </label>
-//             <textarea onChange={handleInput}
-//              value={inputs.message??""}
+//             <textarea
+//               onChange={handleInput}
+//               value={inputs.message ?? ""}
 //               id="message"
 //               name="message"
 //               rows={3}
@@ -101,25 +102,6 @@
 //             />
 //           </div>
 
-//           <div className="flex items-center justify-between">
-//             <span className="text-sm text-gray-600">
-//               Subscribe to newsletter?
-//             </span>
-//             <button
-//               type="button"
-//               onClick={() => setAgreed(!agreed)}
-//               className={`${
-//                 agreed ? "bg-indigo-600" : "bg-gray-200"
-//               } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-//             >
-//               <span
-//                 className={`${
-//                   agreed ? "translate-x-6" : "translate-x-1"
-//                 } inline-block h-4 w-4 transform bg-white rounded-full transition`}
-//               />
-//             </button>
-//           </div>
-
 //           <button
 //             type="submit"
 //             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -127,11 +109,8 @@
 //             Send Message
 //           </button>
 //         </form>
-//         {message && <p>{message}</p>}
-        
+//         {/* {message && <p>{message}</p>} */}
 //       </div>
-      
-
 //     </div>
 //   );
 // }
@@ -142,7 +121,7 @@ import { useState } from "react";
 export default function ContactUs() {
   const [inputs, setInputs] = useState({});
   const [message, setMessage] = useState("");
-  // const [agreed, setAgreed] = useState(false); // Added `agreed` state
+  const [showPopup, setShowPopup] = useState(false); // Track popup visibility
 
   const handleInput = (e) => {
     setInputs((state) => {
@@ -151,7 +130,7 @@ export default function ContactUs() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Fixed typo
+    e.preventDefault();
     fetch(process.env.NEXT_PUBLIC_API_URL + "/enquiry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -159,13 +138,22 @@ export default function ContactUs() {
     })
       .then((res) => res.json())
       .then((res) => {
-        setMessage(res.message);
+        setMessage(res.message || "Thank you! Your message has been sent.");
         setInputs({});
+        setShowPopup(true); // Show the popup
+        setTimeout(() => setShowPopup(false), 3000); // Auto-hide after 3 seconds
       });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 flex flex-col items-center justify-start">
+      {/* Popup message */}
+      {showPopup && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white py-3 px-5 rounded-lg shadow-lg z-50 transition duration-300 ease-in-out">
+          {message}
+        </div>
+      )}
+
       <div className="relative w-full">
         <img
           src="/images/contactusbnr.jpeg"
@@ -241,25 +229,6 @@ export default function ContactUs() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">
-              Subscribe to newsletter?
-            </span>
-            <button
-              type="button"
-              onClick={() => setInputs((prev) => !prev)} // Corrected toggle logic
-              className={`${
-                inputs ? "bg-indigo-600" : "bg-gray-200"
-              } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-            >
-              <span
-                className={`${
-                  inputs ? "translate-x-6" : "translate-x-1"
-                } inline-block h-4 w-4 transform bg-white rounded-full transition`}
-              />
-            </button>
-          </div>
-
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -267,7 +236,6 @@ export default function ContactUs() {
             Send Message
           </button>
         </form>
-        {message && <p>{message}</p>}
       </div>
     </div>
   );

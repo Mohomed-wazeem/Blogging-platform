@@ -36,7 +36,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    await connectMongo(); // Connect to MongoDB
+    await connectMongo(); 
 
     const data = await req.json(); // Parse JSON from the request body
     const newBlog = new Blog(data);

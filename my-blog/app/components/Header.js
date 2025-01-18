@@ -79,12 +79,10 @@ export default function Header() {
                 <Link href="/" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50">Home</Link>
                 <Link href="/about" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50">About</Link>
                 <Link href="/contact" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50">Contact Us</Link>
-                {/* "Write" link appears only if the user is logged in */}
-                  <Link href="/write" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50">Write</Link>
+                <Link href="/write" className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50">Write</Link>
   
               </div>
               <div className="py-6">
-                {/* Sign In/Sign Up Links */}
                 {!isUserLoggedIn ? (
                <>
               <Link href="/signin" className="text-sm font-semibold text-gray-900">Sign In</Link>

@@ -26,20 +26,19 @@ export default function Home() {
   }, []);
 
   // Fetch blogs
-useEffect(() => {
-  const fetchBlogs = async () => {
-    try {
-      const response = await axios.get("/api/blogs");
-      console.log("Blogs fetched successfully:", response.data); // Debugging log
-      setBlogs(response.data.blogs || []); // Handle case where `blogs` is missing
-    } catch (error) {
-      console.error("Error fetching blogs:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get("/api/blogs");
+        console.log("Blogs fetched successfully:", response.data); // Debugging log
+        setBlogs(response.data.blogs || []); // Handle case where `blogs` is missing
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
 
-  fetchBlogs();
-}, []);
-
+    fetchBlogs();
+  }, []);
 
   // Search posts and blogs
   const searchPost = async (e) => {
@@ -90,6 +89,7 @@ useEffect(() => {
         <div className="container mx-auto px-6">
           <h3 className="text-3xl font-bold text-gray-800 mb-6">Featured Blogs</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+           
             {posts.map((post) => (
               <Link href={`/post/${post._id}`} key={post._id}>
                 <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105">
@@ -105,7 +105,6 @@ useEffect(() => {
             {blogs.map((blog) => (
               <Link href={`/blog/${blog._id}`} key={blog._id}>
                 <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                  {/* Blog Image */}
                   <img
                     className="w-full h-40 object-cover"
                     src={blog.image || "/placeholder.jpg"}
@@ -113,7 +112,9 @@ useEffect(() => {
                   />
                   <div className="p-4 bg-white">
                     <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
-                    <p className="text-gray-600 text-sm">{blog.description}</p>
+                    <p className="text-gray-600 text-sm">
+                      {blog.short_description || blog.description.substr(0, 250) + '...'}
+                    </p>
                   </div>
                 </div>
               </Link>
@@ -130,5 +131,3 @@ useEffect(() => {
     </>
   );
 }
-
-

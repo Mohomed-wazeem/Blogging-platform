@@ -1,12 +1,11 @@
 import connectMongo from "../../../utils/connectMongo";
 import PostModel from "../../../models/postModel";
 
-// Handle GET and POST methods
 export async function GET(req) {
   const query = req.nextUrl.searchParams.get('q'); // Retrieve search query
 
   try {
-    await connectMongo(); // Connect to MongoDB
+    await connectMongo(); 
     let posts;
 
     if (query) {
@@ -18,7 +17,6 @@ export async function GET(req) {
         ],
       }).sort({ createdAt: -1 });
     } else {
-      // Fetch all blogs sorted by creation date (descending)
       posts = await PostModel.find({}).sort({ createdAt: -1 });
     }
 

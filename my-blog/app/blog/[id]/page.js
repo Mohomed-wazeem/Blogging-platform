@@ -1,37 +1,53 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // use navigation from next/navigation
+import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import Link from 'next/link'; 
 
 export default function Blog() {
   const [blog, setBlog] = useState(null);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([]); // Related blogs
+  const [comments, setComments] = useState([]); // Comments
+  const [newComment, setNewComment] = useState({ author: '', content: '' }); // New comment state
   const [loading, setLoading] = useState(true);
   const [isClient, setIsClient] = useState(false); // State to track client-side rendering
 
   const params = useParams(); // Accessing route params
   const router = useRouter(); // Router for redirection (only client-side)
 
-  // Ensure we are only using the router on the client-side
   useEffect(() => {
     setIsClient(true); // Mark as client-side once the component has mounted
   }, []);
 
   useEffect(() => {
-    if (params.id) {
-      // Fetch the blog post and related blogs using the `id`
-      fetch(`/api/blog/${params.id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setBlog(data.blog); // Blog data
-          setBlogs(data.relatedBlogs); // Related blogs
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch post:', error);
-          setLoading(false);
-        });
+    fetch(`/api/blog/${params.id}`)
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
+    const contentType = res.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      return res.json();
+    } else {
+      return res.text(); // Handle non-JSON responses
+    }
+  })
+  .then((data) => {
+    if (typeof data === 'string') {
+      console.error('Received non-JSON response:', data);
+      setLoading(false);
+      return;
+    }
+    setBlog(data.blog);
+    setBlogs(data.relatedBlogs);
+    setComments(data.blog.comments);
+    setLoading(false);
+  })
+  .catch((error) => {
+    console.error('Failed to fetch post:', error);
+    setLoading(false);
+  });
+
   }, [params.id]);
 
   const handleRelatedBlogClick = (id) => {
@@ -41,10 +57,38 @@ export default function Blog() {
     }
   };
 
+  const handleCommentChange = (e) => {
+    const { name, value } = e.target;
+    setNewComment((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (!newComment.author || !newComment.content) {
+      alert('Please fill in both fields');
+      return;
+    }
+    fetch(`/api/blog/${params.id}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newComment),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setComments((prev) => [...prev, newComment]);
+        setNewComment({ author: '', content: '' });
+      })
+      .catch((error) => {
+        console.error('Failed to add comment:', error);
+      });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-xl text-gray-500">Loading...</p>
+        <div className="spinner-border animate-spin text-blue-500" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
       </div>
     );
   }
@@ -67,7 +111,6 @@ export default function Blog() {
           </span>
           <div className="flex justify-center space-x-3 text-gray-500 mt-2">
             <p>{blog.created_at_formatted}</p>
-            <p>{blog.author || 'Admin'}</p>
             <p>{blog.reading_time || '5min Read'}</p>
           </div>
         </div>
@@ -86,7 +129,7 @@ export default function Blog() {
         <p className="text-lg leading-relaxed mb-8">{blog.description}</p>
 
         {/* Related blogs */}
-        {blogs.length > 0 && (
+        {Array.isArray(blogs) && blogs.length > 0 && (
           <div>
             <h2 className="text-3xl font-semibold mb-4">Related Blogs</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -113,32 +156,51 @@ export default function Blog() {
           </div>
         )}
 
+        {/* Comments Section */}
         <div className="mt-12">
-            <h2 className="text-3xl font-semibold mb-4">Comments</h2>
-            <div className="space-y-6">
-              <textarea
-                className="w-full border rounded-lg p-3"
-                placeholder="Leave a comment..."
-              />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">
-                Submit Comment
-              </button>
+          <h2 className="text-3xl font-semibold mb-4">Comments</h2>
+          <div className="space-y-6">
+            <textarea
+              className="w-full border rounded-lg p-3"
+              placeholder="Leave a comment..."
+              name="content"
+              value={newComment.content}
+              onChange={handleCommentChange}
+            />
+            <input
+              className="w-full border rounded-lg p-3"
+              placeholder="Your name..."
+              name="author"
+              value={newComment.author}
+              onChange={handleCommentChange}
+            />
+            <button
+              onClick={handleCommentSubmit}
+              className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+            >
+              Submit Comment
+            </button>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold">All Comments</h3>
+            <div className="space-y-6 mt-4">
+              {comments.map((comment, index) => (
+                <div key={index} className="border-t pt-4">
+                  <p className="font-semibold">{comment.author}</p>
+                  <p className="text-gray-600">{comment.content}</p>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
 
-
-          <div className="mt-12 text-center">
-            <a
-              href="/"
-              className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-            >
-              Back to Blogs
-            </a>
-          </div>
+        <div className="mt-12 text-center">
+          <Link href="/" className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+            Back to Blogs
+          </Link>
+        </div>
       </main>
-      
     </>
   );
 }
-
-

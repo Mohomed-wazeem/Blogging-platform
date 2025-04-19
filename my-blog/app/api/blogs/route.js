@@ -1,16 +1,14 @@
 import connectMongo from "../../../utils/connectMongo";
 import Blog from "../../../models/Blog";
 
-//  Handle GET and POST methods
 export async function GET(req) {
-  const query = req.nextUrl.searchParams.get('q'); // Retrieve search query
+  const query = req.nextUrl.searchParams.get('q'); 
 
   try {
-    await connectMongo(); // Connect to MongoDB
+    await connectMongo(); 
     let blogs;
 
     if (query) {
-      // Search for blogs by title or description (case-insensitive)
       blogs = await Blog.find({
         $or: [
           { title: new RegExp(query, 'i') },
@@ -18,7 +16,6 @@ export async function GET(req) {
         ],
       }).sort({ createdAt: -1 });
     } else {
-      // Fetch all blogs sorted by creation date (descending)
       blogs = await Blog.find({}).sort({ createdAt: -1 });
     }
 
@@ -38,10 +35,10 @@ export async function POST(req) {
   try {
     await connectMongo(); 
 
-    const data = await req.json(); // Parse JSON from the request body
+    const data = await req.json(); 
     const newBlog = new Blog(data);
 
-    await newBlog.save(); // Save the blog to the database
+    await newBlog.save(); 
 
     return new Response(JSON.stringify({ success: true, blog: newBlog }), {
       status: 201,

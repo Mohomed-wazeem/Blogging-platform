@@ -2,7 +2,7 @@ import connectMongo from "../../../../utils/connectMongo";
 import PostModel from "../../../../models/postModel";
 
 export async function GET(req) {
-    const id = req.nextUrl.pathname.split('/').pop(); // Extracting the id from the URL
+    const id = req.nextUrl.pathname.split('/').pop(); 
 
     try {
         await connectMongo();

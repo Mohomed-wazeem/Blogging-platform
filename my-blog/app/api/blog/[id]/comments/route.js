@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import connectMongo from "@/utils/connectMongo";
 import Blog from "@/models/Blog";
 
-// Handle GET request (Fetch Comments)
 export async function GET(req, { params }) {
   try {
     await connectMongo();
@@ -16,7 +15,6 @@ export async function GET(req, { params }) {
   }
 }
 
-// Handle POST request (Add Comment)
 export async function POST(req, { params }) {
   try {
     const { author, content } = await req.json();

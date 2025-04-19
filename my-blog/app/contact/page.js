@@ -4,7 +4,7 @@ import { useState } from "react";
 export default function ContactUs() {
   const [inputs, setInputs] = useState({});
   const [message, setMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // Track popup visibility
+  const [showPopup, setShowPopup] = useState(false); 
 
   const handleInput = (e) => {
     setInputs((state) => {
@@ -23,14 +23,13 @@ export default function ContactUs() {
       .then((res) => {
         setMessage(res.message || "Thank you! Your message has been sent.");
         setInputs({});
-        setShowPopup(true); // Show the popup
+        setShowPopup(true); 
         setTimeout(() => setShowPopup(false), 3000); // Auto-hide after 3 seconds
       });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 flex flex-col items-center justify-start">
-      {/* Popup message */}
       {showPopup && (
         <div className="fixed top-4 right-4 bg-green-500 text-white py-3 px-5 rounded-lg shadow-lg z-50 transition duration-300 ease-in-out">
           {message}

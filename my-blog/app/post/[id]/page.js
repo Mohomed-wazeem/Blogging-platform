@@ -15,11 +15,10 @@ export default function Post({ params }) {
       return;
     }
 
-    // Fetch the specific blog post
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/${id}`)
       .then((res) => res.json())
       .then((res) => {
-        console.log("Post Data:", res); // Log the entire post data to inspect the structure
+        console.log("Post Data:", res); 
         if (res) {
           setPost(res);
         } else {
@@ -49,7 +48,6 @@ export default function Post({ params }) {
     );
   }
 
-  // Check if relatedBlogs exists and is an array
   const relatedBlogs = Array.isArray(post.relatedBlogs) ? post.relatedBlogs : [];
 
   return (
@@ -79,7 +77,6 @@ export default function Post({ params }) {
 
         <p className="text-lg leading-relaxed mb-8">{post.description}</p>
 
-        {/* Related Blogs Section */}
         {relatedBlogs.length > 0 ? (
           <div className="mt-12">
             <h2 className="text-3xl font-semibold mb-4">Related Blogs</h2>
@@ -124,7 +121,6 @@ export default function Post({ params }) {
           </div>
         </div>
 
-        {/* Back to Blogs Button */}
         <div className="mt-12 text-center">
           <a
             href="/"

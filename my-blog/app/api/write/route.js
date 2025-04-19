@@ -3,7 +3,6 @@ import Blog from '../../../models/Blog';
 
 export async function POST(req) {
     try {
-        // Extract data from the incoming request
         const { title, description, image } = await req.json();
 
         const newBlog = {
@@ -14,7 +13,6 @@ export async function POST(req) {
 
         await connectMongo();
 
-        // Save the blog to the database
         await Blog.create(newBlog);
 
         return Response.json({ message: 'Blog has been created successfully!' });
@@ -22,3 +20,4 @@ export async function POST(req) {
         return Response.json({ message: error.message });
     }
 }
+

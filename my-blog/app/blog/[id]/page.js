@@ -6,17 +6,17 @@ import Link from 'next/link';
 
 export default function Blog() {
   const [blog, setBlog] = useState(null);
-  const [blogs, setBlogs] = useState([]); // Related blogs
-  const [comments, setComments] = useState([]); // Comments
-  const [newComment, setNewComment] = useState({ author: '', content: '' }); // New comment state
+  const [blogs, setBlogs] = useState([]); 
+  const [comments, setComments] = useState([]); 
+  const [newComment, setNewComment] = useState({ author: '', content: '' }); 
   const [loading, setLoading] = useState(true);
-  const [isClient, setIsClient] = useState(false); // State to track client-side rendering
+  const [isClient, setIsClient] = useState(false); 
 
-  const params = useParams(); // Accessing route params
-  const router = useRouter(); // Router for redirection (only client-side)
+  const params = useParams(); 
+  const router = useRouter(); 
 
   useEffect(() => {
-    setIsClient(true); // Mark as client-side once the component has mounted
+    setIsClient(true); 
   }, []);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function Blog() {
     if (contentType && contentType.includes('application/json')) {
       return res.json();
     } else {
-      return res.text(); // Handle non-JSON responses
+      return res.text(); 
     }
   })
   .then((data) => {
@@ -52,7 +52,6 @@ export default function Blog() {
 
   const handleRelatedBlogClick = (id) => {
     if (isClient) {
-      // Redirect to the clicked related blog's page
       router.push(`/blog/${id}`);
     }
   };
@@ -104,7 +103,6 @@ export default function Blog() {
   return (
     <>
       <main className="container mx-auto px-4 py-6">
-        {/* Blog metadata */}
         <div className="text-center mb-4">
           <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold uppercase">
             {blog.category || 'Blogging'}
@@ -115,7 +113,6 @@ export default function Blog() {
           </div>
         </div>
 
-        {/* Blog title and content */}
         <h1 className="text-5xl font-bold text-center mb-6">{blog.title}</h1>
 
         <div className="flex justify-center mb-6">
@@ -128,7 +125,6 @@ export default function Blog() {
 
         <p className="text-lg leading-relaxed mb-8">{blog.description}</p>
 
-        {/* Related blogs */}
         {Array.isArray(blogs) && blogs.length > 0 && (
           <div>
             <h2 className="text-3xl font-semibold mb-4">Related Blogs</h2>
@@ -137,7 +133,7 @@ export default function Blog() {
                 <div
                   key={relatedBlog._id}
                   className="border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => handleRelatedBlogClick(relatedBlog._id)} // Handle click to switch blog
+                  onClick={() => handleRelatedBlogClick(relatedBlog._id)}
                 >
                   <img
                     src={relatedBlog.image || '/placeholder.jpg'}
@@ -156,7 +152,6 @@ export default function Blog() {
           </div>
         )}
 
-        {/* Comments Section */}
         <div className="mt-12">
           <h2 className="text-3xl font-semibold mb-4">Comments</h2>
           <div className="space-y-6">

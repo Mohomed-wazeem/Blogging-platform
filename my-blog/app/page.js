@@ -9,7 +9,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [search, setSearch] = useState(false);
-  const inputRef = useRef("");
+  const inputRef = useRef("/");
 
   // Fetch posts
   useEffect(() => {
@@ -25,13 +25,12 @@ export default function Home() {
     fetchPosts();
   }, []);
 
-  // Fetch blogs
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get("/api/blogs");
         console.log("Blogs fetched successfully:", response.data); // Debugging log
-        setBlogs(response.data.blogs || []); // Handle case where `blogs` is missing
+        setBlogs(response.data.blogs || []); 
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
@@ -40,7 +39,6 @@ export default function Home() {
     fetchBlogs();
   }, []);
 
-  // Search posts and blogs
   const searchPost = async (e) => {
     if (e.type === "keydown" && e.key !== "Enter") return;
     setSearch(true);
@@ -112,7 +110,7 @@ export default function Home() {
                   />
                   <div className="p-4 bg-white">
                     <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 text-sm whitespace-pre-line">
                       {blog.short_description || blog.description.substr(0, 250) + '...'}
                     </p>
                   </div>
@@ -120,11 +118,7 @@ export default function Home() {
               </Link>
             ))}
 
-            {!posts.length && inputRef.current.value && (
-              <div className="text-center text-gray-500 w-full h-64">
-                <p>No results found.</p>
-              </div>
-            )}
+           
           </div>
         </div>
       </section>

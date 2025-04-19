@@ -42,7 +42,6 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Contact Section */}
         <div className="text-center md:text-right">
           <p className="text-sm">
             <i className="fas fa-envelope mr-2 text-blue-400"></i>
@@ -55,7 +54,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Section */}
       <div className="w-full py-4 text-center text-sm bg-blue-950">
         &copy; {new Date().getFullYear()} BlogLoom. All rights reserved. Created by Wazeem.
       </div>

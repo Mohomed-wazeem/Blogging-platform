@@ -2,14 +2,13 @@ import connectMongo from "../../../utils/connectMongo";
 import PostModel from "../../../models/postModel";
 
 export async function GET(req) {
-  const query = req.nextUrl.searchParams.get('q'); // Retrieve search query
+  const query = req.nextUrl.searchParams.get('q');
 
   try {
     await connectMongo(); 
     let posts;
 
     if (query) {
-      // Search for blogs by title or description (case-insensitive)
       posts = await PostModel.find({
         $or: [
           { title: new RegExp(query, 'i') },
@@ -36,10 +35,10 @@ export async function POST(req) {
   try {
     await connectMongo(); 
 
-    const data = await req.json(); // Parse JSON from the request body
+    const data = await req.json(); 
     const newPost = new PostModel(data);
 
-    await newPost.save(); // Save the blog to the database
+    await newPost.save(); 
 
     return new Response(JSON.stringify(newPost), {
       status: 201,

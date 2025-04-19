@@ -6,7 +6,7 @@ const CommentSchema = new mongoose.Schema(
     content: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
   },
-  { _id: true } // Ensure each comment has a unique _id
+  { _id: true } 
 );
 
 const BlogSchema = new mongoose.Schema(
@@ -15,7 +15,7 @@ const BlogSchema = new mongoose.Schema(
     description: { type: String, required: true },
     image: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
-    comments: [CommentSchema], // Array of comments
+    comments: [CommentSchema], 
   },
   {
     toJSON: { virtuals: true },

@@ -9,7 +9,6 @@ export default function About() {
 
   return (
     <div className="bg-gray-900 pb-18">
-      {/* Hero Section */}
 
 <div className="bg-gradient-to-r from-[#0a0e0a] via-[#120a3a] to-[#0a0e0a] py-24">
   <div className="container mx-auto px-6 text-center">
@@ -41,7 +40,6 @@ export default function About() {
 </div>
 
 
-      {/* "What is a Blog?" Section */}
       <section className="bg-white py-16 shadow-lg">
         <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
           <div
@@ -75,7 +73,6 @@ export default function About() {
       {/* Mission, Story, Values Section */}
       <section className="container mx-auto px-6 py-16">
         <div className="space-y-16">
-          {/* Mission */}
           <div className="flex flex-col lg:flex-row items-center gap-8">
             <div className="lg:w-1/2">
               <h2 className="text-3xl font-semibold text-blue-400 mb-4">Our Mission</h2>
@@ -96,7 +93,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Story */}
           <div className="flex flex-col lg:flex-row items-center gap-8">
             <div className="lg:w-1/2 order-last lg:order-first">
               <Image
@@ -139,7 +135,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Meet Our Team Section */}
       <section className="bg-gray-800 py-14">
   <div className="container mx-auto text-center">
     <h2 className="text-3xl font-bold text-white mb-14">Meet Our Team</h2>
@@ -162,7 +157,6 @@ export default function About() {
               className="object-cover w-full h-full"
             />
           </div>
-          {/* Name and Role */}
           <h3 className="text-lg font-bold text-white mt-4">{member.name}</h3>
           <p className="text-sm text-gray-400">{member.role}</p>
         </div>
